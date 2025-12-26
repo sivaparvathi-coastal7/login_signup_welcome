@@ -1,0 +1,446 @@
+{
+  "testCases": [
+{
+      "id": "PODCAST_TC_001_NavigatePodGalleryButton",
+      "title": "Verify clicking the 'Pod Gallery' button",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "pod_gallery_button": "button:has-text('Pod Gallery')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Pod Gallery' button"
+      ],
+      "expected": [
+        "The application navigates to the main 'Pod Gallery' section or page",
+        "Current URL changes to 'https://dev.vox.snappod.ai/pod-gallery' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_002_NavigateUpgradeButton",
+      "title": "Verify clicking the 'Upgrade' button",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "upgrade_button": "button:has-text('Upgrade')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Upgrade' button"
+      ],
+      "expected": [
+        "The application navigates to the 'Upgrade' or 'Pricing' page",
+        "Current URL changes to 'https://dev.vox.snappod.ai/upgrade' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_003_GenerateScriptMinimumFields",
+      "title": "Verify script generation with only the required podcast topic",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_input": "#rc_select_0",
+        "podcast_topic_value": "The Future of AI in Healthcare",
+        "generate_script_button": "button:has-text('GENERATE SCRIPT')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Enter 'The Future of AI in Healthcare' into the podcast topic input field",
+        "Click the 'GENERATE SCRIPT' button"
+      ],
+      "expected": [
+        "The 'GENERATE SCRIPT' button indicates activity (e.g., spinner, disabled state)",
+        "A success message or status update is displayed, indicating script generation has started",
+        "A new podcast entry appears in 'Your Podcasts' section with a 'Script In Progress' or similar status"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_004_GenerateScriptAllFields",
+      "title": "Verify script generation with all available fields filled",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_input": "#rc_select_0",
+        "podcast_topic_value": "Innovations in Renewable Energy",
+        "language_input": "#react-select-2-input",
+        "language_option_english_indian": "span:has-text('English (Indian)')",
+        "num_speakers_input": "#react-select-3-input",
+        "num_speakers_option_2": "span:has-text('2')",
+        "category_input": "#react-select-4-input",
+        "category_option_business": "span:has-text('Business')",
+        "duration_input": "#react-select-5-input",
+        "duration_option_2_5_4_minutes": "span:has-text('2.5 - 4 Minutes')",
+        "tone_input": "#react-select-6-input",
+        "tone_option_formal": "span:has-text('Formal')",
+        "host_name_input": "[name='host']",
+        "host_name_value": "Dr. Alex Green",
+        "guest_name_input": "[name='guest']",
+        "guest_name_value": "Prof. Maya Singh",
+        "ai_knowledge_toggle_switch": "[role='switch']",
+        "generate_script_button": "button:has-text('GENERATE SCRIPT')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Enter 'Innovations in Renewable Energy' into the podcast topic input field",
+        "Click the Language input, then select 'English (Indian)'",
+        "Click the No. of Speakers input, then select '2'",
+        "Click the Category input, then select 'Business'",
+        "Click the Duration input, then select '2.5 - 4 Minutes'",
+        "Click the Tone input, then select 'Formal'",
+        "Enter 'Dr. Alex Green' into the Name of Host field",
+        "Enter 'Prof. Maya Singh' into the Name of Guest field",
+        "Click the 'GENERATE SCRIPT' button"
+      ],
+      "expected": [
+        "The 'GENERATE SCRIPT' button indicates activity and then a success message",
+        "A new podcast entry appears in 'Your Podcasts' section with the selected details and a 'Script In Progress' status"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_005_GenerateScriptMissingTopic",
+      "title": "Verify validation for missing required podcast topic when generating script",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_input": "#rc_select_0",
+        "generate_script_button": "button:has-text('GENERATE SCRIPT')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Leave the podcast topic input field empty",
+        "Click the 'GENERATE SCRIPT' button"
+      ],
+      "expected": [
+        "A validation error message (e.g., 'Podcast topic is required') is displayed near the podcast topic input",
+        "The script generation process does not start",
+        "The user remains on the current page, and no new podcast entry is created"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_006_AIToggleEnableDisable",
+      "title": "Verify functionality of the AI Knowledge toggle switch",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "ai_knowledge_toggle_switch": "[role='switch']",
+        "select_artifact_button": "button:has-text('Select Artifact')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Observe the initial state of the 'AI Knowledge' toggle and 'Select Artifact' button (assuming it starts disabled)",
+        "Click the 'AI Knowledge' toggle switch"
+      ],
+      "expected": [
+        "The 'AI Knowledge' toggle switch changes to an 'on' state (e.g., visual feedback like color change)",
+        "The 'Select Artifact' button and 'My Knowledge Source' section become enabled/interactive",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_007_SelectLanguageOption",
+      "title": "Verify selecting an option from the Language dropdown",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "language_input": "#react-select-2-input",
+        "english_indian_option": "span:has-text('English (Indian)')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Language' input field to open the dropdown",
+        "Click the 'English (Indian)' option"
+      ],
+      "expected": [
+        "The 'Language' input field displays 'English (Indian)' as the selected value",
+        "The dropdown menu closes",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_008_SelectNumSpeakersOption",
+      "title": "Verify selecting an option from the 'No. of Speakers' dropdown",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "num_speakers_input": "#react-select-3-input",
+        "speaker_option_2": "span:has-text('2')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'No. of Speakers' input field to open the dropdown",
+        "Click the '2' option"
+      ],
+      "expected": [
+        "The 'No. of Speakers' input field displays '2' as the selected value",
+        "The dropdown menu closes",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_009_SelectCategoryOption",
+      "title": "Verify selecting an option from the 'Category' dropdown",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "category_input": "#react-select-4-input",
+        "category_option_business": "span:has-text('Business')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Category' input field to open the dropdown",
+        "Click the 'Business' option"
+      ],
+      "expected": [
+        "The 'Category' input field displays 'Business' as the selected value",
+        "The dropdown menu closes",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_010_SelectDurationOption",
+      "title": "Verify selecting an option from the 'Duration' dropdown",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "duration_input": "#react-select-5-input",
+        "duration_option_2_5_4_minutes": "span:has-text('2.5 - 4 Minutes')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Duration' input field to open the dropdown",
+        "Click the '2.5 - 4 Minutes' option"
+      ],
+      "expected": [
+        "The 'Duration' input field displays '2.5 - 4 Minutes' as the selected value",
+        "The dropdown menu closes",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_011_SelectToneOption",
+      "title": "Verify selecting an option from the 'Tone' dropdown",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "tone_input": "#react-select-6-input",
+        "tone_option_formal": "span:has-text('Formal')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'Tone' input field to open the dropdown",
+        "Click the 'Formal' option"
+      ],
+      "expected": [
+        "The 'Tone' input field displays 'Formal' as the selected value",
+        "The dropdown menu closes",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_012_InputHostGuestNames",
+      "title": "Verify inputting values into Host and Guest name fields",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "host_name_input": "[name='host']",
+        "host_name_value": "Alex Turner",
+        "guest_name_input": "[name='guest']",
+        "guest_name_value": "Brenda Lee"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Enter 'Alex Turner' into the 'Name of Host' input field",
+        "Enter 'Brenda Lee' into the 'Name of Guest' input field"
+      ],
+      "expected": [
+        "The 'Name of Host' input field displays 'Alex Turner'",
+        "The 'Name of Guest' input field displays 'Brenda Lee'",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_013_ClickPodcastReadyItem",
+      "title": "Verify clicking on a 'Podcast Ready' item in the gallery",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_ready_item": "article:has-text('Podcast Ready\\nStories of\\u00a0the\\u00a0G')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the podcast item titled 'Stories of the Gig Economy' with 'Podcast Ready' status"
+      ],
+      "expected": [
+        "The application navigates to the detailed view of the 'Stories of the Gig Economy' podcast",
+        "Current URL changes to 'https://dev.vox.snappod.ai/podcast/stories-of-the-gig-economy' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_014_ClickScriptReadyItem",
+      "title": "Verify clicking on a 'Script Ready' item in the gallery",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "script_ready_item": "article:has-text('Script Ready\\nMaking Sense of t')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the podcast item titled 'Making Sense of the Future wit...' with 'Script Ready' status"
+      ],
+      "expected": [
+        "The application navigates to the detailed view of the 'Making Sense of the Future wit...' podcast, displaying the generated script",
+        "Current URL changes to 'https://dev.vox.snappod.ai/podcast/making-sense-of-the-future' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_015_ClickScriptFailedItem",
+      "title": "Verify clicking on a 'Script Failed' item in the gallery",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "script_failed_item": "article:has-text('Script Failed\\nThe 5 AM Club Fa')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the podcast item titled 'The 5 AM Club Fallacy: Is Slee...' with 'Script Failed' status"
+      ],
+      "expected": [
+        "The application navigates to the detailed view of 'The 5 AM Club Fallacy: Is Slee...' podcast, showing error details",
+        "Current URL changes to 'https://dev.vox.snappod.ai/podcast/5-am-club-fallacy' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_016_HostNameBoundaryInput",
+      "title": "Verify handling of long host name input (boundary)",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_input": "#rc_select_0",
+        "podcast_topic_value": "Long Host Name Test",
+        "host_name_input": "[name='host']",
+        "host_name_value": "Professor Bartholomew Percival Fitzgerald III, The Grand Overseer of Infinite Wisdom and Podcasts",
+        "generate_script_button": "button:has-text('GENERATE SCRIPT')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Enter 'Long Host Name Test' into the podcast topic input field",
+        "Enter a very long string ('Professor Bartholomew Percival Fitzgerald III, The Grand Overseer of Infinite Wisdom and Podcasts') into the 'Name of Host' input field",
+        "Click the 'GENERATE SCRIPT' button"
+      ],
+      "expected": [
+        "The input field either truncates the input, displays a character limit warning/error, or successfully accepts the long name",
+        "If successful, script generation proceeds; if validation error, script generation is blocked",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_017_HostGuestSpecialCharacters",
+      "title": "Verify handling of special characters in Host and Guest names",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_input": "#rc_select_0",
+        "podcast_topic_value": "Special Character Podcast",
+        "host_name_input": "[name='host']",
+        "host_name_value": "H0st-N@me! (Host)",
+        "guest_name_input": "[name='guest']",
+        "guest_name_value": "Gu3st$N@me (Guest)",
+        "generate_script_button": "button:has-text('GENERATE SCRIPT')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Enter 'Special Character Podcast' into the podcast topic input field",
+        "Enter 'H0st-N@me! (Host)' into the 'Name of Host' input field",
+        "Enter 'Gu3st$N@me (Guest)' into the 'Name of Guest' input field",
+        "Click the 'GENERATE SCRIPT' button"
+      ],
+      "expected": [
+        "The system accepts the special characters in the host and guest names, and the script generation proceeds successfully",
+        "Alternatively, if special characters are not allowed, a validation error message is displayed for the respective fields",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_018_AIToggleSelectArtifactInteraction",
+      "title": "Verify the 'Select Artifact' button is only active when AI Knowledge is enabled",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "ai_knowledge_toggle_switch": "[role='switch']",
+        "select_artifact_button": "button:has-text('Select Artifact')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Ensure the 'AI Knowledge' toggle switch is in the 'off' state (default or manually set)",
+        "Attempt to click the 'Select Artifact' button",
+        "Click the 'AI Knowledge' toggle switch to enable it",
+        "Click the 'Select Artifact' button"
+      ],
+      "expected": [
+        "When 'AI Knowledge' is off, the 'Select Artifact' button is disabled and non-clickable",
+        "After enabling 'AI Knowledge', the 'Select Artifact' button becomes enabled",
+        "Clicking the enabled 'Select Artifact' button opens an artifact selection modal or navigates to an artifact management page",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_019_RequiredFieldIndicators",
+      "title": "Verify visibility of required field indicators on initial page load",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "podcast_topic_required_span": "span:has-text('*')",
+        "language_label": "span:has-text('Language:')",
+        "num_speakers_label": "span:has-text('No.of Speakers:')",
+        "category_label": "span:has-text('Category:')",
+        "duration_label": "span:has-text('Duration:')",
+        "tone_label": "span:has-text('Tone:')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Observe the input fields and their labels"
+      ],
+      "expected": [
+        "The podcast topic input field should have a visible '*' or 'Required' indicator",
+        "All other fields like Language, No. of Speakers, Category, Duration, and Tone should either implicitly be marked as optional or have a visible '*' if required",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_020_ClickSnappodLogoNavigation",
+      "title": "Verify clicking the SnapPod Logo navigates to the main dashboard/welcome page",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "snappod_logo_img": "[alt='SnapPod Logo']"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'SnapPod Logo'"
+      ],
+      "expected": [
+        "The page reloads or navigates to the primary dashboard/welcome page",
+        "Current URL remains 'https://dev.vox.snappod.ai/welcome-to-snappod-ai' (if it's already the dashboard) or navigates to a root dashboard like 'https://dev.vox.snappod.ai/' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_021_ClickUserProfileNavigation",
+      "title": "Verify clicking the user profile ('TJ') navigates to the user settings or profile page",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "tj_div": "div:has-text('TJ')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'TJ' user profile element"
+      ],
+      "expected": [
+        "A user menu/dropdown is displayed, or the application navigates to the user's profile/settings page",
+        "Current URL changes to 'https://dev.vox.snappod.ai/profile' or 'https://dev.vox.snappod.ai/settings' (inferred)"
+      ]
+    },
+    {
+      "id": "PODCAST_TC_022_ClickAllPodcastsTab",
+      "title": "Verify clicking the 'All' tab in the 'Your Podcasts' section",
+      "url": "https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+      "inputs": {
+        "all_tab": "div:has-text('All')"
+      },
+      "steps": [
+        "Navigate to https://dev.vox.snappod.ai/welcome-to-snappod-ai",
+        "Click the 'All' tab within the 'Your Podcasts' section"
+      ],
+      "expected": [
+        "The list of podcasts in the 'Your Podcasts' section updates to display all podcasts without any specific filters",
+        "The 'All' tab is visually highlighted as the active/selected tab",
+        "Current URL is https://dev.vox.snappod.ai/welcome-to-snappod-ai"
+      ]
+    }
+    ],
+  "totalTestCases": 22,
+  "generatedAt": "2025-12-24T11:57:35.670365",
+  "modelUsed": "gemini-2.5-flash",
+  "filename": "session_export_generated_20251224_115735.json"
+}
+  

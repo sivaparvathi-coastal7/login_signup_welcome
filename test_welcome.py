@@ -1,0 +1,262 @@
+import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+
+from config.urls import WELCOME_URL
+from config.welcome_locators import WelcomeLocators
+from playwright.sync_api import expect
+
+def test_podcast_tc_001_navigate_pod_gallery_button(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    pod_gallery_button = authenticated_page.locator(WelcomeLocators.POD_GALLERY_BUTTON)
+    expect(pod_gallery_button).to_be_visible()
+    pod_gallery_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_002_navigate_upgrade_button(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    upgrade_button = authenticated_page.locator(WelcomeLocators.UPGRADE_BUTTON)
+    expect(upgrade_button).to_be_visible()
+    upgrade_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_003_generate_script_minimum_fields(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    podcast_topic_input = authenticated_page.locator(WelcomeLocators.PODCAST_TOPIC_INPUT)
+    expect(podcast_topic_input).to_be_visible()
+    podcast_topic_input.click()
+    podcast_topic_option = authenticated_page.locator("span:has-text('The Future of AI in Healthcare')")
+    podcast_topic_option.click()
+    generate_script_button = authenticated_page.locator(WelcomeLocators.GENERATE_SCRIPT_BUTTON)
+    expect(generate_script_button).to_be_visible()
+    generate_script_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_004_generate_script_all_fields(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    podcast_topic_input = authenticated_page.locator(WelcomeLocators.PODCAST_TOPIC_INPUT)
+    expect(podcast_topic_input).to_be_visible()
+    podcast_topic_input.click()
+    podcast_topic_option = authenticated_page.locator("span:has-text('Innovations in Renewable Energy')")
+    podcast_topic_option.click()
+    language_input = authenticated_page.locator(WelcomeLocators.LANGUAGE_INPUT)
+    expect(language_input).to_be_visible()
+    language_input.click()
+    language_option = authenticated_page.locator(WelcomeLocators.ENGLISH_INDIAN_OPTION)
+    language_option.click()
+    num_speakers_input = authenticated_page.locator(WelcomeLocators.NUM_SPEAKERS_INPUT)
+    expect(num_speakers_input).to_be_visible()
+    num_speakers_input.click()
+    num_speakers_option = authenticated_page.locator(WelcomeLocators.SPEAKERS_2_OPTION)
+    num_speakers_option.click()
+    category_input = authenticated_page.locator(WelcomeLocators.CATEGORY_INPUT)
+    expect(category_input).to_be_visible()
+    category_input.click()
+    category_option = authenticated_page.locator(WelcomeLocators.BUSINESS_OPTION)
+    category_option.click()
+    duration_input = authenticated_page.locator(WelcomeLocators.DURATION_INPUT)
+    expect(duration_input).to_be_visible()
+    duration_input.click()
+    duration_option = authenticated_page.locator(WelcomeLocators.DURATION_2_5_4_OPTION)
+    duration_option.click()
+    tone_input = authenticated_page.locator(WelcomeLocators.TONE_INPUT)
+    expect(tone_input).to_be_visible()
+    tone_input.click()
+    tone_option = authenticated_page.locator(WelcomeLocators.FORMAL_OPTION)
+    tone_option.click()
+    host_name_input = authenticated_page.locator(WelcomeLocators.HOST_NAME_INPUT)
+    expect(host_name_input).to_be_visible()
+    host_name_input.fill("Dr. Alex Green")
+    guest_name_input = authenticated_page.locator(WelcomeLocators.GUEST_NAME_INPUT)
+    expect(guest_name_input).to_be_visible()
+    guest_name_input.fill("Prof. Maya Singh")
+    generate_script_button = authenticated_page.locator(WelcomeLocators.GENERATE_SCRIPT_BUTTON)
+    expect(generate_script_button).to_be_visible()
+    generate_script_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_005_generate_script_missing_topic(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    generate_script_button = authenticated_page.locator(WelcomeLocators.GENERATE_SCRIPT_BUTTON)
+    expect(generate_script_button).to_be_visible()
+    generate_script_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_006_ai_toggle_enable_disable(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    ai_knowledge_toggle = authenticated_page.locator(WelcomeLocators.AI_KNOWLEDGE_TOGGLE)
+    expect(ai_knowledge_toggle).to_be_visible()
+    ai_knowledge_toggle.click()
+    select_artifact_button = authenticated_page.locator(WelcomeLocators.SELECT_ARTIFACT_BUTTON)
+    expect(select_artifact_button).to_be_visible()
+    select_artifact_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_007_select_language_option(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    language_input = authenticated_page.locator(WelcomeLocators.LANGUAGE_INPUT)
+    expect(language_input).to_be_visible()
+    language_input.click()
+    language_option = authenticated_page.locator(WelcomeLocators.ENGLISH_INDIAN_OPTION)
+    language_option.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_008_select_num_speakers_option(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    num_speakers_input = authenticated_page.locator(WelcomeLocators.NUM_SPEAKERS_INPUT)
+    expect(num_speakers_input).to_be_visible()
+    num_speakers_input.click()
+    num_speakers_option = authenticated_page.locator(WelcomeLocators.SPEAKERS_2_OPTION)
+    num_speakers_option.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_009_select_category_option(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    category_input = authenticated_page.locator(WelcomeLocators.CATEGORY_INPUT)
+    expect(category_input).to_be_visible()
+    category_input.click()
+    category_option = authenticated_page.locator(WelcomeLocators.BUSINESS_OPTION)
+    category_option.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_010_select_duration_option(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    duration_input = authenticated_page.locator(WelcomeLocators.DURATION_INPUT)
+    expect(duration_input).to_be_visible()
+    duration_input.click()
+    duration_option = authenticated_page.locator(WelcomeLocators.DURATION_2_5_4_OPTION)
+    duration_option.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_011_select_tone_option(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    tone_input = authenticated_page.locator(WelcomeLocators.TONE_INPUT)
+    expect(tone_input).to_be_visible()
+    tone_input.click()
+    tone_option = authenticated_page.locator(WelcomeLocators.FORMAL_OPTION)
+    tone_option.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_012_input_host_guest_names(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    host_name_input = authenticated_page.locator(WelcomeLocators.HOST_NAME_INPUT)
+    expect(host_name_input).to_be_visible()
+    host_name_input.fill("Alex Turner")
+    guest_name_input = authenticated_page.locator(WelcomeLocators.GUEST_NAME_INPUT)
+    expect(guest_name_input).to_be_visible()
+    guest_name_input.fill("Brenda Lee")
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_013_click_podcast_ready_item(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    podcast_ready_item = authenticated_page.locator(WelcomeLocators.PODCAST_READY_ITEM)
+    expect(podcast_ready_item).to_be_visible()
+    podcast_ready_item.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_014_click_script_ready_item(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    script_ready_item = authenticated_page.locator(WelcomeLocators.SCRIPT_READY_ITEM)
+    expect(script_ready_item).to_be_visible()
+    script_ready_item.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_015_click_script_failed_item(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    script_failed_item = authenticated_page.locator(WelcomeLocators.SCRIPT_FAILED_ITEM)
+    expect(script_failed_item).to_be_visible()
+    script_failed_item.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_016_host_name_boundary_input(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    podcast_topic_input = authenticated_page.locator(WelcomeLocators.PODCAST_TOPIC_INPUT)
+    expect(podcast_topic_input).to_be_visible()
+    podcast_topic_input.click()
+    podcast_topic_option = authenticated_page.locator("span:has-text('Long Host Name Test')")
+    podcast_topic_option.click()
+    host_name_input = authenticated_page.locator(WelcomeLocators.HOST_NAME_INPUT)
+    expect(host_name_input).to_be_visible()
+    host_name_input.fill("Professor Bartholomew Percival Fitzgerald III, The Grand Overseer of Infinite Wisdom and Podcasts")
+    generate_script_button = authenticated_page.locator(WelcomeLocators.GENERATE_SCRIPT_BUTTON)
+    expect(generate_script_button).to_be_visible()
+    generate_script_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_017_host_guest_special_characters(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    podcast_topic_input = authenticated_page.locator(WelcomeLocators.PODCAST_TOPIC_INPUT)
+    expect(podcast_topic_input).to_be_visible()
+    podcast_topic_input.click()
+    podcast_topic_option = authenticated_page.locator("span:has-text('Special Character Podcast')")
+    podcast_topic_option.click()
+    host_name_input = authenticated_page.locator(WelcomeLocators.HOST_NAME_INPUT)
+    expect(host_name_input).to_be_visible()
+    host_name_input.fill("H0st-N@me! (Host)")
+    guest_name_input = authenticated_page.locator(WelcomeLocators.GUEST_NAME_INPUT)
+    expect(guest_name_input).to_be_visible()
+    guest_name_input.fill("Gu3st$N@me (Guest)")
+    generate_script_button = authenticated_page.locator(WelcomeLocators.GENERATE_SCRIPT_BUTTON)
+    expect(generate_script_button).to_be_visible()
+    generate_script_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_018_ai_toggle_select_artifact_interaction(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    ai_knowledge_toggle = authenticated_page.locator(WelcomeLocators.AI_KNOWLEDGE_TOGGLE)
+    expect(ai_knowledge_toggle).to_be_visible()
+    ai_knowledge_toggle.click()
+    select_artifact_button = authenticated_page.locator(WelcomeLocators.SELECT_ARTIFACT_BUTTON)
+    expect(select_artifact_button).to_be_visible()
+    select_artifact_button.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_019_required_field_indicators(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    required_indicator = authenticated_page.locator(WelcomeLocators.REQUIRED_INDICATOR)
+    expect(required_indicator).to_be_visible()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_020_click_snappod_logo_navigation(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    snappod_logo = authenticated_page.locator(WelcomeLocators.SNAPPOD_LOGO)
+    expect(snappod_logo).to_be_visible()
+    snappod_logo.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_021_click_user_profile_navigation(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    user_profile = authenticated_page.locator(WelcomeLocators.USER_PROFILE_TJ)
+    expect(user_profile).to_be_visible()
+    user_profile.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)
+
+def test_podcast_tc_022_click_all_podcasts_tab(authenticated_page):
+    authenticated_page.goto(WELCOME_URL, timeout=60000)
+    authenticated_page.wait_for_load_state('networkidle')
+    all_tab = authenticated_page.locator(WelcomeLocators.ALL_TAB)
+    expect(all_tab).to_be_visible()
+    all_tab.click()
+    expect(authenticated_page.url).to_contain(WELCOME_URL)

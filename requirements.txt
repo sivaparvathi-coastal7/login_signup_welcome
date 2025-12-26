@@ -1,0 +1,9 @@
+# Playwright Python (sync API)
+playwright>=1.42.0
+
+# Pytest framework
+pytest>=7.4.0
+
+# Pytest HTML report
+pytest-html>=4.1.1
+python-dotenv
