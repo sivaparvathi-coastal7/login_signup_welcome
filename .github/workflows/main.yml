@@ -21,12 +21,11 @@ jobs:
       uses: actions/checkout@v4
 
     # 2. Install Python Dependencies
-    - name: Install Dependencies
+    -- name: Install Dependencies
       run: |
-        pip install --upgrade pip
-        pip install playwright
-        # We install pytest just in case, though your script uses custom logic
-        pip install pytest
+        # Use python3 -m pip to ensure we use the correct pip
+        python3 -m pip install --upgrade pip
+        python3 -m pip install playwright pytest
 
     # 3. Create 'scripts' folder (Safe-guard)
     # Your python code tries to write to 'scripts/', this ensures it exists.
