@@ -1,0 +1,18 @@
+##[debug]Evaluating condition for step: 'Run Playwright Tests'
+##[debug]Evaluating: success()
+##[debug]Evaluating success:
+##[debug]=> true
+##[debug]Result: true
+##[debug]Starting: Run Playwright Tests
+##[debug]Loading inputs
+##[debug]Loading env
+Run python -m pytest
+##[debug]/usr/bin/bash -e /home/runner/work/_temp/1ab259c9-91ef-40f6-ab20-3153a77f2bc7.sh
+============================= test session starts ==============================
+platform linux -- Python 3.10.19, pytest-9.0.2, pluggy-1.6.0
+rootdir: /home/runner/work/login_signup/login_signup
+collected 0 items
+
+============================ no tests ran in 0.12s =============================
+Error: Process completed with exit code 5.
+##[debug]Finishing: Run Playwright Tests
