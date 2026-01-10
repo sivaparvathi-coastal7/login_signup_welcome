@@ -1,0 +1,3 @@
+Generate a Playwright test script in Python using pytest.
+The script should navigate to the login page, enter valid credentials, and verify the dashboard loads.
+Use the Page Object Model structure if possible.
