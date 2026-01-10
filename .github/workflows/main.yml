@@ -60,7 +60,7 @@ jobs:
       if: failure()
       uses: actions/checkout@v4
       with:
-        repository: sivaparvathi-coastal7/https://Aswini-Kamireddy
+        repository: sivaparvathi-coastal7/Aswini-Kamireddy
         token: ${{ secrets.TRIAGE_PAT }}
         path: triage-folder
 
