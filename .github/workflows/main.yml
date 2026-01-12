@@ -55,7 +55,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         # ✅ Ensure this is "OwnerName/RepoName" 
-        repository: Aswini-Kamireddy
+        repository: Aswinikamireddy
         token: ${{ secrets.TRIAGE_PAT }}
         path: triage-folder
 
