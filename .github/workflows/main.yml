@@ -1,93 +1,216 @@
-name: QA Garden Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  test:
-    timeout-minutes: 60
+  lint:
+    name: Lint Code
     runs-on: ubuntu-latest
-    
-    container:
-      image: mcr.microsoft.com/playwright:v1.40.0-jammy
-    
-    env:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }} 
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Run flake8
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      
+      - name: Check formatting with black
+        run: black --check .
 
-    - name: Install Dependencies
-      run: |
-        echo "⬇️ Installing Tools..."
-        apt-get update && apt-get install -y python3-pip git
-        python3 -m pip install --upgrade pip
-        python3 -m pip install playwright pytest pytest-playwright fastapi httpx groq python-dotenv
-        python3 -m playwright install --with-deps chromium
+  test:
+    name: Run Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # Added pytest-xdist for future parallel execution
+          pip install pytest pytest-playwright pytest-json-report requests
+      
+      - name: Install Playwright browsers
+        run: playwright install --with-deps chromium
+      
+      - name: Run tests
+        id: pytest
+        continue-on-error: true
+        run: |
+          # Added --output to ensure screenshots go to a predictable folder
+          pytest --verbose --json-report --json-report-file=test-report.json --output=test-results --screenshot=only-on-failure --video=retain-on-failure
+      
+      - name: Parse and send failed tests to Jira
+        if: steps.pytest.outcome == 'failure'
+        run: |
+          python - <<'EOF'
+          import json
+          import requests
+          import os
+          import sys
+          from pathlib import Path
+          
+          if not os.path.exists('test-report.json'):
+              print("::error::Test report file missing!")
+              sys.exit(1)
+          
+          with open('test-report.json', 'r') as f:
+              report = json.load(f)
+          
+          failed_tests = [t for t in report.get('tests', []) if t.get('outcome') == 'failed']
+          
+          jira_url = os.environ['JIRA_URL']
+          jira_email = os.environ['JIRA_EMAIL']
+          jira_token = os.environ['JIRA_API_TOKEN']
+          jira_project = os.environ['JIRA_PROJECT_KEY']
+          
+          headers = {'Content-Type': 'application/json'}
+          auth = (jira_email, jira_token)
+          
+          def check_existing_issue(test_name):
+              # Check if a bug is already open (status != Done)
+              jql = f'project={jira_project} AND summary~"{test_name}" AND labels="automated-test-failure" AND status != Done'
+              try:
+                  res = requests.get(f"{jira_url}/rest/api/2/search", headers=headers, auth=auth, params={'jql': jql})
+                  return res.status_code == 200 and res.json().get('total', 0) > 0
+              except Exception:
+                  return False
+          
+          for test in failed_tests:
+              test_name = test.get('nodeid', 'Unknown')
+              
+              if check_existing_issue(test_name):
+                  print(f"⊘ Skipping duplicate: {test_name}")
+                  continue
+              
+              # Robust screenshot finding - Playwright creates complex folder names
+              clean_name = test_name.split("::")[-1] # Get just function name
+              screenshot_file = None
+              
+              # Look for png files in test-results that match the test name
+              found_files = list(Path('test-results').rglob(f"*{clean_name}*/*.png"))
+              if found_files:
+                  screenshot_file = found_files[0] # Take the first match
+              
+              issue_data = {
+                  "fields": {
+                      "project": {"key": jira_project},
+                      "summary": f"Test Failure: {test_name}",
+                      "description": f"Failed: {test_name}\n\nError:\n{test.get('call', {}).get('longrepr', 'No details')[:2000]}",
+                      "issuetype": {"name": "Bug"},
+                      "labels": ["automated-test-failure"]
+                  }
+              }
+              
+              resp = requests.post(f"{jira_url}/rest/api/2/issue", headers=headers, auth=auth, json=issue_data)
+              
+              if resp.status_code == 201:
+                  key = resp.json()['key']
+                  print(f"✓ Created {key}")
+                  
+                  # Upload screenshot if found and exists
+                  if screenshot_file and screenshot_file.exists():
+                      files = {'file': (screenshot_file.name, open(screenshot_file, 'rb'), 'image/png')}
+                      at_headers = {'X-Atlassian-Token': 'no-check'}
+                      requests.post(f"{jira_url}/rest/api/2/issue/{key}/attachments", headers=at_headers, auth=auth, files=files)
+                      print(f"  ✓ Attached screenshot")
+              else:
+                  print(f"✗ Failed: {resp.text}")
+          EOF
+        env:
+          JIRA_URL: ${{ secrets.JIRA_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+      
+      - name: Upload Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4 
+        with:
+          name: playwright-results
+          path: |
+            test-report.json
+            test-results/
+          retention-days: 7
+      
+      - name: Fail job if tests failed
+        if: steps.pytest.outcome == 'failure'
+        run: exit 1
 
-    # ✅ FIX 1: Create 'prompt.txt' so the AI knows what to do
-    - name: Create Prompt File
-      run: |
-        echo "Generate a Playwright test script for index.html." > prompt.txt
-        echo "It should check if the title contains 'QA Garden'." >> prompt.txt
+  build:
+    name: Build Application
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Build package
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          python -m build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
 
-    # ✅ FIX 2: Create a Dummy Page so the script detects "Pages"
-    - name: Create Dummy Application
-      run: |
-        mkdir -p templates
-        echo "<html><head><title>QA Garden Dashboard</title></head><body><h1>Login</h1></body></html>" > templates/index.html
-        echo "✅ Created dummy templates/index.html to satisfy page detection."
-
-    - name: Create Output Directory
-      run: mkdir -p scripts
-
-    - name: Generate Test Script
-      run: python3 generate_script.py
-
-    - name: Run Tests
-      id: run-tests
-      run: python3 scripts/test_universal_autogenerated.py --headless
-
-    # ==========================================================
-    # 🚨 TRIAGE SECTION
-    # ==========================================================
-    
-    - name: Checkout Triage Repo
-      if: failure()
-      uses: actions/checkout@v4
-      with:
-        # ✅ FIX 3: Ensure we have "Owner/Repo" format
-        repository: ${{ github.repository_owner }}/Aswinikamireddy
-        token: ${{ secrets.TRIAGE_PAT }}
-        path: triage-folder
-
-    - name: Push Failure Report
-      if: failure()
-      run: |
-        echo "🚨 Processing Failure..."
-        
-        # Verify folder exists
-        if [ ! -d "triage-folder" ]; then
-          echo "❌ Error: Triage folder missing. Check permissions."
-          exit 1
-        fi
-
-        if [ -f "artifacts/report.html" ]; then
-          echo "📄 Report found."
-        else
-          mkdir -p artifacts
-          echo "Critical Failure in Run ${{ github.run_id }}" > artifacts/report.html
-        fi
-
-        cd triage-folder
-        cp ../artifacts/report.html ./failure_report_${{ github.run_id }}.html
-        
-        git config user.name "QA Garden Bot"
-        git config user.email "bot@github.com"
-        git add .
-        git commit -m "🚨 Test Failed: Run ${{ github.run_id }}"
-        git push --set-upstream origin master
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      
+      # Customize this section based on your deployment target
+      # Example: Deploy to AWS, Heroku, Docker, etc.
+      
+      - name: Deploy to production
+        run: |
+          echo "Add your deployment commands here"
+          # Example for Docker:
+          # docker build -t myapp:latest .
+          # docker push myapp:latest
+          
+          # Example for AWS:
+          # aws s3 sync ./dist s3://my-bucket/
+          
+          # Example for Heroku:
+          # git push heroku main
+        env:
+          # Add your deployment secrets here
+          # DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          pass
