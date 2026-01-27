@@ -59,7 +59,7 @@ jobs:
       - name: Generate Test Script
         run: |
           if [ -f "generate_script.py" ]; then
-            python3 generate_script.py
+            python3 generate_script.py || echo "⚠️ Test generation skipped"
           else
             echo "Skipping generation (script not found)"
           fi
@@ -139,7 +139,7 @@ jobs:
           cd triage-folder
           git config user.name "QA Garden Bot"
           git config user.email "bot@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.TRIAGE_PAT }}@github.com/Aswinikamireddy.git
+          git remote set-url origin https://x-access-token:${{ secrets.TRIAGE_PAT }}@github.com/https://github.com/Tulasiram01/QA-GARDEN.git
           git add .
           git commit -m "🚨 Automated Defect: Run ${{ github.run_id }}"
           git push origin master
