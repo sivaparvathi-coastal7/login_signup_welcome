@@ -127,7 +127,7 @@ jobs:
         if: steps.pytest.outcome == 'failure'
         uses: actions/checkout@v4
         with:
-          repository: sivaparvathi-coastal7/Aswinikamireddy
+          repository: Tulasiram01/QA-GARDEN.git
           token: ${{ secrets.TRIAGE_PAT }}
           path: triage-folder
           fetch-depth: 0
