@@ -29,19 +29,7 @@ jobs:
         run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Auto-format with Black
-        run: black .
-
-      - name: Commit Black formatting changes
-        run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "QA Garden Bot"
-            git config user.email "bot@github.com"
-            git add .
-            git commit -m "🎨 Auto-format code with Black"
-            git push
-          else
-            echo "No formatting changes needed"
-          fi
+        run: black 
   test:
     name: Run Tests
     needs: lint
